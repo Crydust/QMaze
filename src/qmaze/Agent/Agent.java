@@ -1,6 +1,7 @@
 package qmaze.Agent;
 
 import java.util.ArrayList;
+import java.util.Random;
 import qmaze.Environment.Coordinates;
 
 /**
@@ -50,9 +51,36 @@ public class Agent {
         }
         
         //CODE TO SELECT NEXT ACTION
-        Coordinates nextAction;
         
-        throw new RuntimeException("IMPLEMENT ME!");
+        final Random random = new Random();
+        
+        // decide wether we explore(a random move) or exploit(use the best move)
+        final Coordinates currentLocation = location();
+        final double maxQ = nextAvailableActions
+                .stream()
+                .mapToDouble(action->memory.rewardFromAction(currentLocation, action))
+                .max()
+                .orElse(0.0);
+        final double epsilon = getLearningParameters().getEpsilon();
+        final double randomNumber = random.nextDouble();
+        final boolean nothingInMemory = maxQ < 0.000001;
+        final boolean exploring = (randomNumber < epsilon) || (nothingInMemory);
+        
+        final Coordinates nextAction;
+        if (exploring) {
+            // explore(a random move)
+            nextAction = nextAvailableActions.get(random.nextInt(nextAvailableActions.size()));
+        } else {
+            // exploit(use the best move)
+            nextAction = nextAvailableActions.stream()
+                    .sorted((Coordinates o1, Coordinates o2) -> -1 * Double.compare(
+                            memory.rewardFromAction(currentLocation, o1),
+                            memory.rewardFromAction(currentLocation, o2)))
+                    .findFirst()
+                    .get();
+        }
+        
+        return nextAction;
     }
     
     public void takeAction(Coordinates actionTaken, double reward) {
