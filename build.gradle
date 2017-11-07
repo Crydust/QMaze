@@ -14,19 +14,3 @@ dependencies {
 
 mainClassName = 'qmaze.QMaze'
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src']
-        }
-        resources {
-            srcDirs = ['src']
-        }
-    }
-    test {
-        java {
-            srcDirs = ['test']
-        }
-    }
-}
-
