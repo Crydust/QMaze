@@ -40,7 +40,10 @@ public class AgentMemory {
     * For hints on the steps I need to take, see hints.txt
     */
     public void updateMemory(Coordinates action, double reward) {
-        throw new RuntimeException("IMPLEMENT ME!");
+        final HashMap<Coordinates, Double> map = mazeMemory
+                .computeIfAbsent(currentState, (k)->new HashMap<>());
+        final Double oldValue = map.getOrDefault(action, 0.0);
+        map.put(action, oldValue + reward);
     }
     
     public void move(Coordinates action) { 
