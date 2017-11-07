@@ -83,10 +83,12 @@ public class LearningGridComponent extends Component {
             else {
                 for (HashMap.Entry<Coordinates,Double> entry : actions.entrySet()) {
                     Coordinates nextRoom = entry.getKey();
-                    String qValueForText = String.format("%.2f", entry.getValue());
-                    sb.append(qValueForText);
-                    sb.append(getArrowDirection(roomCoordinate, nextRoom));
-                    sb.append("\n");
+                    if (entry.getValue() > 0.000_1) {
+                        String qValueForText = String.format("%.2f", entry.getValue());
+                        sb.append(qValueForText);
+                        sb.append(getArrowDirection(roomCoordinate, nextRoom));
+                        sb.append("\n");
+                    }
                     textPane.setStyle(assets.getWhiteBackground());
                     String qValueForToolTip = String.format("%.4f", entry.getValue());
                     toolTipText = toolTipText + "Moving " + getDirectionDesc(roomCoordinate, nextRoom) + " for " + qValueForToolTip + "\n";
