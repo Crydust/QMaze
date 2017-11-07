@@ -84,11 +84,22 @@ public class Agent {
     }
     
     public void takeAction(Coordinates actionTaken, double reward) {
-                
-        double qValue = 0; //TO WORK OUT!!!!
+
+        final Coordinates currentLocation = location();
+        // Q(S(t), A(t)) ← Q(S(t), A(t)) + α [ R(t+1) + γ max Q(S(t+1), a) − Q(S(t), A(t)) ].
+        //                 ^^^^^^^^^^^^^^^ this part is done in updateMemory
+        final double currentQ = memory.rewardFromAction(currentLocation, actionTaken);
+        final double maxQ = memory.actionsForState(actionTaken)
+                .stream()
+                .mapToDouble(action -> memory.rewardFromAction(actionTaken, action))
+                .max()
+                .orElse(0.0);
+        final double alpha = learningParameters.getLearningRate();
+        final double gamma = learningParameters.getGamma();
+        final double qValue = alpha * (reward + (gamma  * maxQ) - currentQ);
+
         memory.updateMemory(actionTaken, qValue);
         memory.move(actionTaken);
-        throw new RuntimeException("IMPLEMENT ME!");
     }
     
     
