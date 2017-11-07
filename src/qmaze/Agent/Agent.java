@@ -63,12 +63,15 @@ public class Agent {
                 .orElse(0.0);
         final double epsilon = getLearningParameters().getEpsilon();
         final double randomNumber = random.nextDouble();
-        final boolean nothingInMemory = maxQ < 0.000001;
+        final boolean nothingInMemory = maxQ < 0.000_1;
         final boolean exploring = (randomNumber < epsilon) || (nothingInMemory);
         
         final Coordinates nextAction;
         if (exploring) {
             // explore(a random move)
+            if (nextAvailableActions.size() > 1) {
+                nextAvailableActions.remove(memory.getPreviousState());
+            }
             nextAction = nextAvailableActions.get(random.nextInt(nextAvailableActions.size()));
         } else {
             // exploit(use the best move)

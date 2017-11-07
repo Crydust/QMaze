@@ -22,13 +22,19 @@ public class AgentMemory {
     
     private HashMap<Coordinates, HashMap<Coordinates, Double>> mazeMemory;
     private Coordinates currentState;
+    private Coordinates previousState;
     
     public AgentMemory() {
         mazeMemory = new HashMap();
     }
     
     public void setStartingState(Coordinates startingState) {
+        this.previousState = startingState;
         this.currentState = startingState;
+    }
+    
+    public Coordinates getPreviousState() {
+        return previousState;
     }
     
     public Coordinates getCurrentState() {
@@ -47,6 +53,7 @@ public class AgentMemory {
     }
     
     public void move(Coordinates action) { 
+        this.previousState = this.currentState;
         this.currentState = action;
     }
     
